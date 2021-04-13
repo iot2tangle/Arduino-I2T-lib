@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <WiFi101.h>
 
 char json[1024];
 char s_name[12][64], d[12][64];
@@ -37,9 +38,29 @@ void print_init_msg()
 	
 }
 
-void init_WiFi(const char* a, const char* b)
+void init_WiFi(const char* ssid, const char* pass)
 {
-	Serial.println("Init WiFi");
+	int status = WL_IDLE_STATUS;
+	
+    // check for the presence of the shield:
+  	if (WiFi.status() == WL_NO_SHIELD) {
+    	Serial.println("WiFi shield not present");
+    	// don't continue:
+    	while (true);
+  	}
+
+	  // attempt to connect to WiFi network:
+	while (status != WL_CONNECTED) {
+		Serial.print("Attempting to connect to SSID: \"");
+		Serial.print(ssid); Serial.println("\" ...");
+		// Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+		status = WiFi.begin(ssid, pass);
+
+		// wait 10 seconds for connection:
+		delay(10000);
+	}
+	Serial.println("Connected to wifi");
+
 }
 
 void init_HTTP(const char* c, int d)
