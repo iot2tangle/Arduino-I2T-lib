@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include <WiFi101.h>
+#include <ArduinoHttpClient.h>
+
+
 
 char json[1024];
 char s_name[12][64], d[12][64];
@@ -60,6 +63,15 @@ void init_WiFi(const char* ssid, const char* pass)
 		delay(10000);
 	}
 	Serial.println("Connected to wifi");
+	
+	  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your WiFi shield's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
 
 }
 
@@ -178,7 +190,7 @@ char* generate_json()
     }
 
 	strcat(json, "],\"device\": \"");
-	strcat(json, "123123");
+	strcat(json, "DEVICE_ID_1");
 	strcat(json, "\",\"timestamp\": \"0\"}");	
 	
 	Serial.println(json);
@@ -186,7 +198,56 @@ char* generate_json()
 	return json;
 }
 
-void send_HTTP(const char* e)
+void send_HTTP(const char* jsondata)
 {
 	Serial.println("Send HTTP");
+	
+	char serverAddress[] = "192.168.1.115/sensor_data";  // server address
+	int port = 8080;
+	
+	WiFiClient wifi;
+	HttpClient client = HttpClient(wifi, serverAddress, port);
+
+
+	  Serial.println("making POST request");
+	  String contentType = "application/json";
+
+	  client.post("/", contentType, jsondata);
+
+	  // read the status code and body of the response
+	  int statusCode = client.responseStatusCode();
+	  String response = client.responseBody();
+
+	  Serial.print("Status code: ");
+	  Serial.println(statusCode);
+	  Serial.print("Response: ");
+	  Serial.println(response);
+
+	  Serial.println("Wait five seconds");
+	  delay(5000);
+
+//  HTTPClient http;
+//  String url="192.168.1.115:8080";
+
+
+//  //String url="https://<IPaddress>/testurl";
+//  //String jsondata=(<properly escaped json data here>);
+
+//  http.begin(url); 
+//  http.addHeader("Content-Type", "Content-Type: application/json"); 
+
+//  int httpResponseCode = http.POST(jsondata); //Send the actual POST request
+
+//  if(httpResponseCode>0){
+//    String response = http.getString();  //Get the response to the request
+//    Serial.println(httpResponseCode);   //Print return code
+//    Serial.println(response);           //Print request answer
+//  } else {
+//    Serial.print("Error on sending POST: ");
+//    Serial.println(httpResponseCode);
+
+//    http.end();
+
+// }
+	
 }
