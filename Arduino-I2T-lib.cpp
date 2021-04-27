@@ -6,9 +6,11 @@
 //Sensors
 #include "BlueDot_BME280.h"
 #include <MPU6050_light.h>
+#include <BH1750_WE.h>
 
-BlueDot_BME280 bme;		//Object for BME280
+BlueDot_BME280 bme;
 MPU6050 mpu(Wire);
+BH1750_WE myBH1750(0x23);
 
 
 char json[1024];
@@ -119,7 +121,12 @@ void init_sensors(bool ft)
 		Serial.print("OK");
 	
 	Serial.print("	||	BH1750: ");
-	//print_bh1750();
+	myBH1750.init();
+	if (myBH1750.getLux() > 40208.0)
+		Serial.print("NOT Detected");
+	else
+		Serial.print("OK");
+
 	Serial.print("	||	Acoustic: ");
 	//print_acoustic();
 	Serial.print ("	||\n");
