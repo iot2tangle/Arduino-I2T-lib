@@ -1,12 +1,14 @@
 #include <Arduino.h>
+#include "Wire.h"
 #include <WiFi101.h>
 #include <ArduinoHttpClient.h>
 
 //Sensors
 #include "BlueDot_BME280.h"
+#include <MPU6050_light.h>
 
 BlueDot_BME280 bme;		//Object for BME280
-
+MPU6050 mpu(Wire);
 
 
 char json[1024];
@@ -87,8 +89,11 @@ void init_HTTP(const char* c, int d)
 
 void init_sensors(bool ft)
 {
+	if (ft){
+		Wire.begin();
+	}
+
 	Serial.print("   Sensors Detection:  ||	BME280: ");
-	
 	if (ft){
 		bme.parameter.communication = 0;                    //I2C communication for Sensor 2 (bme2)
 		bme.parameter.I2CAddress = 0x76;                    //I2C Address for Sensor 2 (bme2)
@@ -105,9 +110,14 @@ void init_sensors(bool ft)
 		Serial.print("NOT Detected");
 	else
 		Serial.print("OK");
-	
+
+
 	Serial.print("	||	MPU6050: ");
-	//print_mpu6050();
+	if (mpu.begin() != 0)
+		Serial.print("NOT Detected");
+	else
+		Serial.print("OK");
+	
 	Serial.print("	||	BH1750: ");
 	//print_bh1750();
 	Serial.print("	||	Acoustic: ");
