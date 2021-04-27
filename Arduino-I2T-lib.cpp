@@ -8,6 +8,9 @@
 #include <MPU6050_light.h>
 #include <BH1750_WE.h>
 
+#define ENABLE_SOUND 5
+#define VALUE_SOUND 4
+
 BlueDot_BME280 bme;
 MPU6050 mpu(Wire);
 BH1750_WE myBH1750(0x23);
@@ -128,8 +131,16 @@ void init_sensors(bool ft)
 		Serial.print("OK");
 
 	Serial.print("	||	Acoustic: ");
-	//print_acoustic();
-	Serial.print ("	||\n");
+	if (ft){
+		pinMode(ENABLE_SOUND, INPUT);
+		pinMode(VALUE_SOUND, INPUT);
+	}
+	if (digitalRead(ENABLE_SOUND))
+		Serial.print("NOT Detected");
+	else
+		Serial.print("OK");
+	
+	Serial.print("	||\n");
 }
 
 char* generate_json()
