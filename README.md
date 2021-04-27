@@ -16,7 +16,7 @@ https://github.com/arduino-libraries/ArduinoHttpClient
 https://github.com/BlueDot-Arduino/BlueDot_BME280
 
 # MPU6050 Accelerometer/Gyroscope
-https://github.com/adafruit/Adafruit_MPU6050
+https://github.com/rfetick/MPU6050_light
 
 ### BH1750 Light Sensor
 https://github.com/wollewald/BH1750_WE
