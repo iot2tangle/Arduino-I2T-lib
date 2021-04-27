@@ -2,6 +2,11 @@
 #include <WiFi101.h>
 #include <ArduinoHttpClient.h>
 
+//Sensors
+#include "BlueDot_BME280.h"
+
+BlueDot_BME280 bme;		//Object for BME280
+
 
 
 char json[1024];
@@ -80,9 +85,34 @@ void init_HTTP(const char* c, int d)
 	Serial.println("Init HTTP");
 }
 
-void init_sensors()
+void init_sensors(bool ft)
 {
-	Serial.println("Init sensors");
+	Serial.print("   Sensors Detection:  ||	BME280: ");
+	
+	if (ft){
+		bme.parameter.communication = 0;                    //I2C communication for Sensor 2 (bme2)
+		bme.parameter.I2CAddress = 0x76;                    //I2C Address for Sensor 2 (bme2)
+		bme.parameter.sensorMode = 0b11;                    //Setup Sensor mode for Sensor 2 
+		bme.parameter.IIRfilter = 0b100;                   //IIR Filter for Sensor 2
+		bme.parameter.humidOversampling = 0b101;            //Humidity Oversampling for Sensor 2
+		bme.parameter.tempOversampling = 0b101;              //Temperature Oversampling for Sensor 2
+		bme.parameter.pressOversampling = 0b101;             //Pressure Oversampling for Sensor 2 
+		bme.parameter.pressureSeaLevel = 1013.25;            //default value of 1013.25 hPa (Sensor 2)
+		bme.parameter.tempOutsideCelsius = 15;               //default value of 15°C
+		bme.parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
+	}
+	if (bme.init() != 0x60) 
+		Serial.print("NOT Detected");
+	else
+		Serial.print("OK");
+	
+	Serial.print("	||	MPU6050: ");
+	//print_mpu6050();
+	Serial.print("	||	BH1750: ");
+	//print_bh1750();
+	Serial.print("	||	Acoustic: ");
+	//print_acoustic();
+	Serial.print ("	||\n");
 }
 
 char* generate_json()

@@ -6,7 +6,7 @@
 void print_init_msg();
 void init_WiFi(const char*, const char*);
 void init_HTTP(const char*, int);
-void init_sensors();
+void init_sensors(bool);
 char* generate_json();
 void send_HTTP(const char*);
 
