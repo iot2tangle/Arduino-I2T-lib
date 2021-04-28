@@ -19,6 +19,14 @@ BH1750_WE myBH1750(0x23);
 char json[1024];
 char s_name[12][64], d[12][64];
 
+bool en_bme, en_mpu, en_bh, en_sound;
+
+char buffer[16];
+char* s;
+
+const char* int_str(int);
+const char* float_str(float);
+
 void print_init_msg()
 {
 	delay(3000);
@@ -37,19 +45,6 @@ void print_init_msg()
     strcpy(s_name[9],"X");
     strcpy(s_name[10],"Y");
     strcpy(s_name[11],"Z");
-    
-    strcpy(d[0] , "2"); 
-    strcpy(d[1] , "54");
-    strcpy(d[2] , "23");
-    strcpy(d[3] , "234");
-    strcpy(d[4] , "23");
-    strcpy(d[5] , "32");
-    strcpy(d[6] , "0,2");
-    strcpy(d[7] , "2.4");
-    strcpy(d[8] , "823");
-    strcpy(d[9] , "4");
-    strcpy(d[10] , "6");
-    strcpy(d[11] , "69");
 	
 }
 
@@ -112,23 +107,41 @@ void init_sensors(bool ft)
 		bme.parameter.tempOutsideFahrenheit = 59;            //default value of 59°F
 	}
 	if (bme.init() != 0x60) 
+	{
 		Serial.print("NOT Detected");
+		en_bme = false;
+	}
 	else
+	{
 		Serial.print("OK");
+		en_bme = true;
+	}
 
 
 	Serial.print("	||	MPU6050: ");
 	if (mpu.begin() != 0)
+	{
 		Serial.print("NOT Detected");
+		en_mpu = false;
+	}
 	else
+	{
 		Serial.print("OK");
+		en_mpu = true;
+	}
 	
 	Serial.print("	||	BH1750: ");
 	myBH1750.init();
 	if (myBH1750.getLux() > 40208.0)
+	{
 		Serial.print("NOT Detected");
+		en_bh = false;
+	}
 	else
+	{
 		Serial.print("OK");
+		en_bh = true;
+	}
 
 	Serial.print("	||	Acoustic: ");
 	if (ft){
@@ -136,11 +149,51 @@ void init_sensors(bool ft)
 		pinMode(VALUE_SOUND, INPUT);
 	}
 	if (digitalRead(ENABLE_SOUND))
+	{
 		Serial.print("NOT Detected");
+		en_sound = false;
+	}
 	else
+	{
 		Serial.print("OK");
+		en_sound = true;
+	}
 	
 	Serial.print("	||\n");
+}
+
+void read_sensors()
+{   
+    strcpy(d[0] , float_str(45.5));
+    
+    if (en_bme)
+    {
+		strcpy(d[1] , float_str(54.0));
+		strcpy(d[2] , float_str(23.0));
+		strcpy(d[3] , float_str(234.0));
+	}
+	
+	if (en_sound)
+	{
+		if (digitalRead(VALUE_SOUND))
+    		strcpy(d[4] , "High");
+    	else
+    		strcpy(d[4] , "Low");
+    }
+    
+    if (en_bh)
+    	strcpy(d[5] , float_str(32.0));
+    
+    if (en_mpu)
+    {
+		strcpy(d[6] , float_str(0.0));
+		strcpy(d[7] , float_str(2.4));
+		strcpy(d[8] , float_str(823.0));
+		strcpy(d[9] , float_str(4.5));
+		strcpy(d[10] , float_str(6.23));
+		strcpy(d[11] , float_str(69.3));
+	}
+
 }
 
 char* generate_json()
@@ -161,9 +214,8 @@ char* generate_json()
 			strcat(json, "\"}");
     }
     strcat(json, "]}");
-	
-//    if (check_bme280())
-    if (true)
+
+    if (en_bme)
     {
 		aux = 0;
 		strcat(json, ",{\"sensor\":\"Environmental\",\"data\":[");
@@ -178,9 +230,8 @@ char* generate_json()
 		}
 		strcat(json, "]}");
     }
-	
-//    if (check_acoustic())
-    if (true)
+
+    if (en_sound)
     {
 		aux = 0;
 		strcat(json, ",{\"sensor\":\"Acoustic\",\"data\":[");
@@ -195,9 +246,8 @@ char* generate_json()
 		}
 		strcat(json, "]}");
     }
-	
-//    if (check_bh1750())
-    if (true)
+
+    if (en_bh)
     {
 		aux = 0;
 		strcat(json, ",{\"sensor\":\"Light\",\"data\":[");
@@ -212,9 +262,8 @@ char* generate_json()
 		}
 		strcat(json, "]}");
     }
-	
-//    if (check_mpu6050())
-    if (true)
+
+    if (en_mpu)
     {
 		aux = 0;
 		strcat(json, ",{\"sensor\":\"Acelerometer\",\"data\":[");
@@ -227,12 +276,8 @@ char* generate_json()
 			strcat(json, d[i+6]);
 			strcat(json, "\"}");
 		}
-	strcat(json, "]}");
-    }
+		strcat(json, "]}");
 
-//    if (check_mpu6050())
-    if (true)
-    {
 		aux = 0;
 		strcat(json, ",{\"sensor\":\"Gyroscope\",\"data\":[");
 		for (i=0;i<3;i++)
@@ -308,4 +353,20 @@ void send_HTTP(const char* jsondata)
 
 // }
 	
+}
+
+const char* int_str(int d)
+{
+    s = " ";
+    sprintf(buffer, "%d", d);
+    s=buffer;
+    return s;
+}
+
+const char* float_str(float d)
+{
+    s = " ";
+    sprintf(buffer, "%.02f", d);
+    s=buffer;
+    return s;
 }
