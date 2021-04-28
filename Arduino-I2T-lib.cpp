@@ -132,7 +132,7 @@ void init_sensors(bool ft)
 	
 	Serial.print("	||	BH1750: ");
 	myBH1750.init();
-	if (myBH1750.getLux() > 40208.0)
+	if (myBH1750.getLux() > 4700.0)
 	{
 		Serial.print("NOT Detected");
 		en_bh = false;
