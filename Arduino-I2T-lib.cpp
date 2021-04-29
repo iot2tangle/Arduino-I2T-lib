@@ -4,6 +4,7 @@
 #include <ArduinoHttpClient.h>
 
 //Sensors
+#include <TemperatureZero.h>
 #include "BlueDot_BME280.h"
 #include <MPU6050_light.h>
 #include <BH1750_WE.h>
@@ -11,6 +12,7 @@
 #define ENABLE_SOUND 5
 #define VALUE_SOUND 4
 
+TemperatureZero TempZero = TemperatureZero();
 BlueDot_BME280 bme;
 MPU6050 mpu(Wire);
 BH1750_WE myBH1750(0x23);
@@ -93,6 +95,8 @@ void init_sensors(bool ft)
 		Wire.begin();
 	}
 
+	TempZero.init(); // Internal Temperature Sensor
+
 	Serial.print("   Sensors Detection:  ||	BME280: ");
 	if (ft){
 		bme.parameter.communication = 0;                    //I2C communication for Sensor 2 (bme2)
@@ -164,7 +168,7 @@ void init_sensors(bool ft)
 
 void read_sensors()
 {   
-    strcpy(d[0] , float_str(45.5));
+    strcpy(d[0] , float_str(TempZero.readInternalTemperature()));
     
     if (en_bme)
     {
