@@ -132,7 +132,7 @@ void init_sensors(bool ft)
 	
 	Serial.print("	||	BH1750: ");
 	myBH1750.init();
-	if (myBH1750.getLux() > 4700.0)
+	if (int(myBH1750.getLux()) == 4703)
 	{
 		Serial.print("NOT Detected");
 		en_bh = false;
@@ -168,9 +168,9 @@ void read_sensors()
     
     if (en_bme)
     {
-		strcpy(d[1] , float_str(54.0));
-		strcpy(d[2] , float_str(23.0));
-		strcpy(d[3] , float_str(234.0));
+		strcpy(d[1] , float_str(bme.readTempC()));
+		strcpy(d[2] , float_str(bme.readHumidity()));
+		strcpy(d[3] , float_str(bme.readPressure()));
 	}
 	
 	if (en_sound)
@@ -182,16 +182,16 @@ void read_sensors()
     }
     
     if (en_bh)
-    	strcpy(d[5] , float_str(32.0));
+		strcpy(d[5] , float_str(myBH1750.getLux()));
     
     if (en_mpu)
     {
-		strcpy(d[6] , float_str(0.0));
-		strcpy(d[7] , float_str(2.4));
-		strcpy(d[8] , float_str(823.0));
-		strcpy(d[9] , float_str(4.5));
-		strcpy(d[10] , float_str(6.23));
-		strcpy(d[11] , float_str(69.3));
+		strcpy(d[6] , float_str(mpu.getAccX()));
+		strcpy(d[7] , float_str(mpu.getAccY()));
+		strcpy(d[8] , float_str(mpu.getAccZ()));
+		strcpy(d[9] , float_str(mpu.getGyroX()));
+		strcpy(d[10] , float_str(mpu.getGyroY()));
+		strcpy(d[11] , float_str(mpu.getGyroZ()));
 	}
 
 }
