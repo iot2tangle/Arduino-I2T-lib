@@ -9,6 +9,6 @@ void init_HTTP(const char*, int);
 void init_sensors(bool);
 void read_sensors();
 char* generate_json();
-void send_HTTP(const char*);
+void send_HTTP(const char*, const char*, int);
 
 #endif

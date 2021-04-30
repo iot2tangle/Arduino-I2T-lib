@@ -305,58 +305,32 @@ char* generate_json()
 	return json;
 }
 
-void send_HTTP(const char* jsondata)
+void send_HTTP(const char* jsondata, const char* serverAddress, int port)
 {
 	Serial.println("Send HTTP");
 	
-	char serverAddress[] = "192.168.1.115/sensor_data";  // server address
-	int port = 8080;
+	//char serverAddress[] = "192.168.1.115";  // server address
+	//int port = 8080;
 	
 	WiFiClient wifi;
 	HttpClient client = HttpClient(wifi, serverAddress, port);
+	client.setTimeout(1);
 
+	Serial.println("making POST request");
+	String contentType = "application/json";
 
-	  Serial.println("making POST request");
-	  String contentType = "application/json";
+	client.post("/", contentType, jsondata);
 
-	  client.post("/", contentType, jsondata);
+	// read the status code and body of the response
+	int statusCode = client.responseStatusCode();
+	String response = client.responseBody();
 
-	  // read the status code and body of the response
-	  int statusCode = client.responseStatusCode();
-	  String response = client.responseBody();
+	Serial.print("Status code: ");
+	Serial.println(statusCode);
+	Serial.print("Response: ");
+	Serial.println(response);
 
-	  Serial.print("Status code: ");
-	  Serial.println(statusCode);
-	  Serial.print("Response: ");
-	  Serial.println(response);
-
-	  Serial.println("Wait five seconds");
-	  delay(5000);
-
-//  HTTPClient http;
-//  String url="192.168.1.115:8080";
-
-
-//  //String url="https://<IPaddress>/testurl";
-//  //String jsondata=(<properly escaped json data here>);
-
-//  http.begin(url); 
-//  http.addHeader("Content-Type", "Content-Type: application/json"); 
-
-//  int httpResponseCode = http.POST(jsondata); //Send the actual POST request
-
-//  if(httpResponseCode>0){
-//    String response = http.getString();  //Get the response to the request
-//    Serial.println(httpResponseCode);   //Print return code
-//    Serial.println(response);           //Print request answer
-//  } else {
-//    Serial.print("Error on sending POST: ");
-//    Serial.println(httpResponseCode);
-
-//    http.end();
-
-// }
-	
+	delay(200);
 }
 
 const char* int_str(int d)
