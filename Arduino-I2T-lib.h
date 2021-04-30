@@ -3,11 +3,12 @@
 
 #include <stdint.h>
 
-void print_init_msg();
+void init_I2T(const char*);
 void init_WiFi(const char*, const char*);
 void init_HTTP(const char*, int);
 void init_sensors(bool);
 void read_sensors();
+void print_counter(int);
 char* generate_json();
 void send_HTTP(const char*, const char*, int);
 

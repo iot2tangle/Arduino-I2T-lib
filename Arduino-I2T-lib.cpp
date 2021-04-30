@@ -17,7 +17,7 @@ BlueDot_BME280 bme;
 MPU6050 mpu(Wire);
 BH1750_WE myBH1750(0x23);
 
-
+char dev_name[32];
 char json[1024];
 char s_name[12][64], d[12][64];
 
@@ -29,11 +29,11 @@ char* s;
 const char* int_str(int);
 const char* float_str(float);
 
-void print_init_msg()
+void init_I2T(const char* name)
 {
-	delay(3000);
-	Serial.println("Hi");
-	
+	delay(100);
+
+	strcpy(dev_name, name); 
 	// Init Json static chars
 	strcpy(s_name[0],"InternalTemperature"); 
     strcpy(s_name[1],"Temperature");
@@ -47,7 +47,6 @@ void print_init_msg()
     strcpy(s_name[9],"X");
     strcpy(s_name[10],"Y");
     strcpy(s_name[11],"Z");
-	
 }
 
 void init_WiFi(const char* ssid, const char* pass)
@@ -74,19 +73,24 @@ void init_WiFi(const char* ssid, const char* pass)
 	Serial.println("Connected to wifi");
 	
 	  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+	Serial.print("SSID: ");
+	Serial.print(WiFi.SSID());
 
-  // print your WiFi shield's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
-
+	// print your WiFi shield's IP address:
+	IPAddress ip = WiFi.localIP();
+	Serial.print("  ---  IP Address: ");
+	Serial.println(ip);
 }
 
 void init_HTTP(const char* c, int d)
 {
-	Serial.println("Init HTTP");
+	// Not necessary
+}
+
+void print_counter(int c)
+{
+	Serial.print("\n-------------------------------------------------------------------------------------------------------\nData Collect - ");
+	Serial.println(c);
 }
 
 void init_sensors(bool ft)
@@ -97,7 +101,7 @@ void init_sensors(bool ft)
 
 	TempZero.init(); // Internal Temperature Sensor
 
-	Serial.print("   Sensors Detection:  ||	BME280: ");
+	Serial.print("\tSensors Detection:  ||	BME280: ");
 	if (ft){
 		bme.parameter.communication = 0;                    //I2C communication for Sensor 2 (bme2)
 		bme.parameter.I2CAddress = 0x76;                    //I2C Address for Sensor 2 (bme2)
@@ -296,10 +300,11 @@ char* generate_json()
 		strcat(json, "]}");
     }
 
-	strcat(json, "],\"device\": \"");
-	strcat(json, "DEVICE_ID_1");
-	strcat(json, "\",\"timestamp\": \"0\"}");	
+	strcat(json, "],\"device\":\"");
+	strcat(json, dev_name);
+	strcat(json, "\",\"timestamp\":\"0\"}");	
 	
+	Serial.print("JSON: ");
 	Serial.println(json);
 
 	return json;
@@ -307,16 +312,12 @@ char* generate_json()
 
 void send_HTTP(const char* jsondata, const char* serverAddress, int port)
 {
-	Serial.println("Send HTTP");
-	
-	//char serverAddress[] = "192.168.1.115";  // server address
-	//int port = 8080;
-	
+	Serial.println("\t\tSending Data to Tangle...");
+
 	WiFiClient wifi;
 	HttpClient client = HttpClient(wifi, serverAddress, port);
 	client.setTimeout(1);
 
-	Serial.println("making POST request");
 	String contentType = "application/json";
 
 	client.post("/", contentType, jsondata);
