@@ -1,10 +1,10 @@
-# Arduino-I2T-lib
+# I2T-arduino-lib
 IOT2TANGLE library for Arduino boards
 
 ## Dependencies
 
 ### IOT2TANGLE Arduino lib
-https://github.com/iot2tangle/Arduino-I2T-lib
+https://github.com/iot2tangle/I2T-arduino-lib
 
 ### WiFi Arduino
 https://github.com/arduino-libraries/WiFi101

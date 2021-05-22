@@ -1,5 +1,5 @@
-#ifndef ARDUINO_I2T_LIB_H_
-#define ARDUINO_I2T_LIB_H_
+#ifndef I2T_ARDUINO_LIB_H_
+#define I2T_ARDUINO_LIB_H_
 
 #include <stdint.h>
 
