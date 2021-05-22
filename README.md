@@ -1,4 +1,4 @@
-# I2T-arduino-lib
+# I2T-iota-arduino-lib
 IOT2TANGLE library for Arduino boards
 
 Please make sure you also have the following libraries installed (as they are dependencies). In case of not having any of those libraries, this library will not work.

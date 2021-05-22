@@ -2,7 +2,7 @@
 #include "Wire.h"
 #include <WiFi101.h>
 #include <ArduinoHttpClient.h>
-#include "I2T-arduino-lib.h"
+#include "I2T-iota-arduino-lib.h"
 
 //Sensors
 #include <TemperatureZero.h>
