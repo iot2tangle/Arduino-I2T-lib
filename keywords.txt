@@ -1,0 +1,25 @@
+#######################################
+# Syntax Coloring Map MedianFilter
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+#ARDUINO_I2T_LIB_H_	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+#init_I2T	KEYWORD2
+#init_WiFi      KEYWORD2
+
+#init_HTTP      KEYWORD3
+#init_sensors   KEYWORD4
+#read_sensors   KEYWORD5
+#print_counter  KEYWORD6
+#generate_json  KEYWORD7
+#send_HTTP      KEYWORD8
+
+#######################################
+# Constants (LITERAL1)
+#######################################
