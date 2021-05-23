@@ -5,7 +5,7 @@
 #######################################
 # Datatypes (KEYWORD1)
 #######################################
-#ARDUINO_I2T_LIB_H_	KEYWORD1
+#I2T_ARDUINO_LIB_H_	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
