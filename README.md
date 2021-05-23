@@ -4,8 +4,8 @@ IOT2TANGLE library for Arduino boards
 # To Install
 
 1. Download this repository as a zipped file
-2. In the Arduino IDE Sketch --> Inclue Library --> Add .ZIP Library ...
-3. File -->Examples --> I2T-iota-arduino-lib --> basic
+2. In the Arduino IDE Sketch --> Include Library --> Add .ZIP Library ...
+3. File --> Examples --> I2T-iota-arduino-lib --> basic   
 4. Select your board
 5. Select your port
 6. Upload  (double press button for bootloader mode and re-select port if needed)
