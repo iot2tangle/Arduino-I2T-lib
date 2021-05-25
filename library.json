@@ -1,0 +1,24 @@
+{
+  "name": "I2T-iota-arduino-lib",
+  "keywords": "arduino,pro,portenta,portentaH7,lora,lorawan,ethernet,vision,shield,breakout,board,edgeimpulse,MQTT,IOT2TANGLE",
+  "description": "IOT2TANGLE ???????",
+  "authors":
+  [
+    {
+      "name": "????",
+      "email": "?????@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/iot2tangle/I2T-iota-arduino-lib"
+  },
+  "version":"0.2.0",
+  "frameworks": "arduino",
+  "platforms": "*",
+  "export": {
+    "include": "libraries/I2T-iota-arduino-lib/src"
+  }
+}
